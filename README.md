@@ -39,7 +39,7 @@ esy build
 After building the project, you can run the main binary that is produced.
 
 ```
-esy x AdventOfCode2019App.exe 
+ esy x Advent.exe -d 1 day1.txt
 ```
 
 ## Running Tests:
