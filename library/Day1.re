@@ -14,7 +14,6 @@ let func = (in_stream) => {
   let sum = ref(0);
   let rec calc = (n, acc) => {
     let res = positive(Float.floor(n /. 3.0) -. 2.0);
-    print_endline(string_of_float(res));
     if(res > 0.) {
       calc(res, acc +. res)
     } else {
