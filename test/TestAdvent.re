@@ -1,2 +1,2 @@
-Lib.Day1.req();
+Lib.Util.req();
 print_endline("Hello!");
