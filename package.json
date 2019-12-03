@@ -1,0 +1,40 @@
+{
+  "name": "advent-of-code-2019",
+  "version": "0.0.0",
+  "description": "Advent of code 2019",
+  "esy": {
+    "build": "dune build -p <PACKAGE_NAME>",
+    "buildDev": "pesy",
+    "release": { "releasedBinaries": [ "Advent.exe" ] }
+  },
+  "buildDirs": {
+    "test": {
+      "require": [ "advent-of-code-2019.lib" ],
+      "main": "TestAdvent",
+      "name": "TestAdvent.exe"
+    },
+    "library": { "require": ["curly"], "name": "advent-of-code-2019.lib", "namespace": "Lib" },
+    "executable": {
+      "require": [ "advent-of-code-2019.lib" ],
+      "main": "Advent",
+      "name": "Advent.exe"
+    }
+  },
+  "scripts": {
+    "pesy": "bash -c 'env PESY_MODE=update pesy'",
+    "test": "esy x TestAdvent.exe"
+  },
+  "dependencies": {
+    "@esy-ocaml/reason": "*",
+    "@opam/curly": "0.1.0",
+    "@opam/dune": ">=1.6.0",
+    "ocaml": "^4.4.0"
+  },
+  "devDependencies": {
+    "ocaml": "4.7.1004",
+    "@esy-ocaml/rtop":"*",
+    "refmterr": "*",
+    "pesy": "*",
+    "@opam/merlin": "*"
+  }
+}
