@@ -12,6 +12,7 @@ let main () = {
 
     let func = switch(day.contents) {
         | 1 => Lib.Day1.func
+        | 2 => Lib.Day2.func 
         | _ => Lib.Day1.func
     }
 
