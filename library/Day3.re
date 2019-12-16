@@ -39,7 +39,7 @@ let lines_of_path = path => {
       | U(v) => helper(rst, [(x, y + v), ...coords], [Ver(x, (y, y + v)), ...acc])
       | D(v) => helper(rst, [(x, y - v), ...coords], [Ver(x, (y, y - v)), ...acc])
       | L(v) => helper(rst, [(x - v, y), ...coords], [Hor(y, (x, x - v)), ...acc])
-      | R(v) => helper(rst, [(x + v, y), ...coords],[Hor(y, (x, x + v)), ...acc])
+      | R(v) => helper(rst, [(x + v, y), ...coords], [Hor(y, (x, x + v)), ...acc])
       }
     };
   };
@@ -66,11 +66,61 @@ let cross = (p1, p2) => {
   switch (coordinates) {
   | Some((x, x1, x2, y, y1, y2)) =>
     switch ((in_range(x, x1, x2), in_range(y, y1, y2))) {
-    | (Some(m), Some(n)) => abs(m) + abs(n)
-    | _ => 0
+    | (Some(m), Some(n)) => (m, n)
+    | _ => (0, 0)
     };
-  | None => 0
+  | None => (0, 0)
   };
+};
+
+let _crossings = (p1, p2) =>
+  List.sort(
+    (x, y) => x - y,
+    List.filter(
+      x => x > 0,
+      List.flatten(
+        List.map(
+          x => List.map(y => {
+              let (m, n) = cross(x, y);
+              abs(m) + abs(n)
+          }, lines_of_path(p2)),
+          lines_of_path(p1),
+        ),
+      ),
+    ),
+  );
+
+let len = p => {
+    switch p {
+    | U(v) | D(v) | L(v) | R(v) => v
+    };
+}
+
+// Sorry about this!
+let len_of_path = (path, (xt, yt)) => {
+  let rec helper = (moves, coords, dist) => {
+    let (x, y) = List.hd(coords);
+    switch (moves) {
+    | [] => dist
+    | [p, ...rst] => {
+        let (x1, y1) = switch (p) {
+        | U(v) => (x, y + v)
+        | D(v) => (x, y - v)
+        | L(v) => (x - v, y)
+        | R(v) => (x + v, y)
+        };
+        switch ((p, x1-xt, y1-yt)) {
+        | (U(v), 0, d) => if(d>0) {dist+v-d} else {helper(rst, [(x1, y1), ...coords], dist+v)}
+        | (D(v), 0, d) => if(d<0) {dist+v+d} else {helper(rst, [(x1, y1), ...coords], dist+v)}
+        | (L(v), d, 0) => if(d<0) {dist+v+d} else {helper(rst, [(x1, y1), ...coords], dist+v)}
+        | (R(v), d, 0) => if(d>0) {dist+v-d} else {helper(rst, [(x1, y1), ...coords], dist+v)}
+        | _ => helper(rst, [(x1, y1), ...coords], dist+len(p))
+        }
+        
+      }
+    };
+  };
+  helper(path, [(0, 0)], 0);
 };
 
 let crossings = (p1, p2) =>
@@ -80,7 +130,10 @@ let crossings = (p1, p2) =>
       x => x > 0,
       List.flatten(
         List.map(
-          x => List.map(y => cross(x, y), lines_of_path(p2)),
+          x => List.map(y => {
+              let (m, n) = cross(x, y);
+              len_of_path(p1, (m,n)) + len_of_path(p2, (m,n))
+          }, lines_of_path(p2)),
           lines_of_path(p1),
         ),
       ),
