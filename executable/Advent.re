@@ -14,6 +14,7 @@ let main () = {
         | 1 => Lib.Day1.func
         | 2 => Lib.Day2.func 
         | 3 => Lib.Day3.func
+        | 4 => Lib.Day4.func
         | _ => Lib.Day1.func
     }
 
