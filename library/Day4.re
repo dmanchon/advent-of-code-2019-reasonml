@@ -4,10 +4,26 @@ let parse = s => String.split_on_char('-', s);
 
 let range = (x1, x2) => List.init(x2-x1, x => x + x1)
 
-let adjacent = x => {
+let _adjacent = x => {
     let x1 = List.concat([x, [-1]]);
     let x2 = List.concat([[-1], x]);
     List.exists(((x,y))=> x == y, List.combine(x1, x2))
+}
+
+let adjacent = x => {
+    let rec helper = (x, prev, counts) => {
+        
+        let (count, others) = switch(counts) {
+        | [] => (1, [])
+        | [hd, ...tl] => (hd, tl)
+        };
+        
+        switch x {
+            | [] => counts
+            | [hd, ...tl] => if (hd == prev) {helper(tl, prev, [count+1, ...others])} else {helper(tl, hd, [1, count, ...others])}
+        }
+    }
+    List.exists(x=> x==2, helper(x, -1, []))
 }
 
 let increasing = x => {
