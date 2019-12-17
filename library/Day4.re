@@ -20,7 +20,12 @@ let adjacent = x => {
         
         switch x {
             | [] => counts
-            | [hd, ...tl] => if (hd == prev) {helper(tl, prev, [count+1, ...others])} else {helper(tl, hd, [1, count, ...others])}
+            | [hd, ...tl] => 
+                if (hd == prev) {
+                    helper(tl, prev, [count+1, ...others])
+                } else {
+                    helper(tl, hd, [1, count, ...others])
+                }
         }
     }
     List.exists(x=> x==2, helper(x, -1, []))
